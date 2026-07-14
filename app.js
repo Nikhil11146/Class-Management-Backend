@@ -7,10 +7,7 @@ import routesRouter from "./routes/routes.controller.js";
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-    origin: CLIENT_URL,
-    credentials: true
-}));
+app.use(cors());
 
 // Routes
 app.use('/api/v1', routesRouter);
