@@ -77,6 +77,7 @@ Represents a student, moderator or admin.
 | Field    | Type             | Required | Unique | Notes                                   |
 | -------- | ---------------- | -------- | ------ | --------------------------------------- |
 | _id      | ObjectId         | ✓        | -      | MongoDB ID                              |
+| rollNo   | Number           | ✓        | ✓      | Requied and Unique                      |
 | name     | String           | ✓        | -      | Max Length: 25                          |
 | email    | String           | ✓        | ✓      | Lowercase, Trimmed                      |
 | password | String           | ✓        | -      | Hashed, `select:false`                  |
