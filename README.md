@@ -270,7 +270,7 @@ The API follows REST principles and is organized into feature-based resources.
 
 ---
 
-## send  Otp
+## Send  Otp
 
 ```
 POST /api/v1/auth/send-otp
