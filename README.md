@@ -270,6 +270,40 @@ The API follows REST principles and is organized into feature-based resources.
 
 ---
 
+## send  Otp
+
+```
+POST /api/v1/auth/send-otp
+```
+
+### Authentication
+
+Not Required
+
+### Request Body
+
+```json
+{
+    "email" : "user@gmail.com",
+}
+```
+
+### Response
+
+```json
+{
+    "success": true,
+    "message": "OTP sent successfully"
+}
+```
+
+### Notes
+
+*
+
+
+---
+
 ## Register
 
 ```
@@ -294,7 +328,7 @@ Not Required
         "sec" : "A"
     },
     "role" : "ROLE_USER",
-    "otp" : 123456    
+    "otp" : "123456"
 }
 ```
 
@@ -302,6 +336,21 @@ Not Required
 
 ```json
 {
+    "success": true,
+    "message": "User created successfully",
+    "data": {
+        "user": {
+            "rollNo" : 123456,
+            "name" : "User",
+            "email" : "user@gmail.com",
+            "groupId" : "6a5632a7afae49887f9e5b5d"
+            "role" : "ROLE_USER",
+            "_id": "6a5634a373112138a578bbb5",
+            "createdAt": "2026-07-14T13:07:47.448Z",
+            "updatedAt": "2026-07-14T13:07:47.448Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
