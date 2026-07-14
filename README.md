@@ -318,17 +318,20 @@ Not Required
 
 ```json
 {
-    "rollNo" : 123456,
-    "name" : "User",
-    "email" : "user@gmail.com",
-    "password" : "pwd@123$",
-    "group" : {
-        "year" : 1,
-        "dept" : "CSE",
-        "sec" : "A"
-    },
-    "role" : "ROLE_USER",
-    "otp" : "123456"
+    "token": "asdfw54f34t43t34ggf345y345",
+    "user" : {
+        "rollNo" : 123456,
+        "name" : "User",
+        "email" : "user@gmail.com",
+        "password" : "pwd@123$",
+        "group" : {
+            "year" : 1,
+            "dept" : "CSE",
+            "sec" : "A"
+        },
+        "role" : "ROLE_USER",
+        "otp" : "123456"
+    }
 }
 ```
 
