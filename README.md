@@ -284,6 +284,17 @@ Not Required
 
 ```json
 {
+    "rollNo" : 123456,
+    "name" : "User",
+    "email" : "user@gmail.com",
+    "password" : "pwd@123$",
+    "group" : {
+        "year" : 1,
+        "dept" : "CSE",
+        "sec" : "A"
+    },
+    "role" : "ROLE_USER",
+    "otp" : 123456    
 }
 ```
 
