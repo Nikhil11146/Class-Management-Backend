@@ -138,7 +138,7 @@ export const logInController = async (req, res, next) => {
 
 export const logoutAllController = async (req, res, next) => {
     try {
-        let user = await UserMode.findById(req.user._id);
+        let user = await UserModel.findById(req.user._id);
 
         user.tokenVersion += 1;
         await user.save();
@@ -152,3 +152,20 @@ export const logoutAllController = async (req, res, next) => {
     }
 }
 
+export const forgotPasswordController = async (req, res, next) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+
+        await session.commitTransaction()
+        res.status(201).send({
+            success: true,
+            message: "Updated Password"
+        })
+    } catch (e) {
+        session.endTransaction();
+        next(e);
+    } finally {
+        session.endSession()
+    }
+}
