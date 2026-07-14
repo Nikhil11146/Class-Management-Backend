@@ -10,14 +10,14 @@ const transporter = nodemailer.createTransport({
     }
 })
 
-export const sendOtpMail = async (email, otp, event) => {
+export const sendOtpMail = async (email, otp) => {
     try {
         await transporter.sendMail({
             from: `"ClassSync" <${EMAIL}>`,
             to: email,
             subject: "Email Verification",
             html: `
-                <h2>Email Verification for ${event}</h2>
+                <h2>Email Verification</h2>
                 <p>Your One-Time Password (OTP) is:</p>
                 
                 <h1 style="letter-spacing:4px;">

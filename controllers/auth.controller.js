@@ -23,7 +23,7 @@ export const sendOtpController = async (req, res, next) => {
         await OtpModel.deleteOne({ email });
         await OtpModel.create({ email, otp: hashedOtp});
 
-        await sendOtpMail(email, otp, "Sign Up");
+        await sendOtpMail(email, otp);
 
         res.status(200).send({
             success: true,
@@ -156,16 +156,37 @@ export const forgotPasswordController = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+        const { email, otp, password } = req.body;
 
-        await session.commitTransaction()
-        res.status(201).send({
+        if (!email || !otp || !password) {
+            throw new ApiError(400, "Missing required fields");
+        }
+
+        const user = await UserModel.findOne({ email }).session(session).select("+password");
+
+        if (!user) {
+            throw new ApiError(401, "Incorrect email or password");
+        }
+
+        const dbOtp = await OtpModel.findOne({ email }).session(session);
+        if (!dbOtp || !(await bcrypt.compare(otp, dbOtp.otp))) {
+            throw new ApiError(401, "Incorrect or Expired OTP");
+        }
+
+        user.password = await bcrypt.hash(password, 10);
+        await OtpModel.deleteOne({ email }, { session });
+        user.tokenVersion += 1;
+        await user.save({ session });
+
+        await session.commitTransaction();
+        res.status(200).send({
             success: true,
             message: "Updated Password"
         })
     } catch (e) {
-        session.endTransaction();
+        await session.abortTransaction();
         next(e);
     } finally {
-        session.endSession()
+        await session.endSession()
     }
 }
