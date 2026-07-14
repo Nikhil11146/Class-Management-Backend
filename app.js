@@ -3,6 +3,7 @@ import cors from 'cors';
 import { PORT, CLIENT_URL } from './config/env.js';
 import {connectDB} from "./database/mongodb.js";
 import routesRouter from "./routes/routes.controller.js";
+import {errorMiddleware} from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(cors());
 
 // Routes
 app.use('/api/v1', routesRouter);
+
+app.use(errorMiddleware);
 
 app.get('/api/v1', (req, res) => {
     res.status(200).send({

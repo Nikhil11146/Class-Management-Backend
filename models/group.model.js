@@ -18,7 +18,6 @@ const groupSchema = new mongoose.Schema({
     moderatorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
     }
 }, {
     timestamps: true
