@@ -270,7 +270,7 @@ The API follows REST principles and is organized into feature-based resources.
 
 ---
 
-## send  Otp
+## Send  Otp
 
 ```
 POST /api/v1/auth/send-otp
@@ -339,6 +339,7 @@ Not Required
     "success": true,
     "message": "User created successfully",
     "data": {
+        "token": "asdfw54f34t43t34ggf345y345",
         "user": {
             "rollNo" : 123456,
             "name" : "User",
@@ -374,6 +375,8 @@ Not Required
 
 ```json
 {
+    "email" : "user@gmail.com",
+    "password" : "pwd@123$"
 }
 ```
 
@@ -381,6 +384,24 @@ Not Required
 
 ```json
 {
+    "success": true,
+    "message": "Signed In successfully",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTU2N2UwZGUzNDI2MDAxYjc0ZDcyOTIiLCJyb2xlIjoiUk9MRV9VU0VSIiwidG9rZW5WZXJzaW9uIjoxLCJpYXQiOjE3ODQwNTMzMjEsImV4cCI6MTc4NjY0NTMyMX0.aBjcdiRdDMYgGmdaB6lXPBYstXgSpsJjD4tvhZ6TZWQ",
+        "user": {
+            "_id": "6a567e0de3426001b74d7292",
+            "rollNo": 425054,
+            "name": "User",
+            "email": "user@gmail.com",
+            "password": null,
+            "groupId": "6a5632a7afae49887f9e5b5d",
+            "role": "ROLE_USER",
+            "tokenVersion": 1,
+            "createdAt": "2026-07-14T18:21:01.201Z",
+            "updatedAt": "2026-07-14T18:21:01.201Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
