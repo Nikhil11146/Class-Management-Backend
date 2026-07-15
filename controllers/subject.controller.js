@@ -2,7 +2,17 @@ import ApiError from "../classes/apiError.class.js";
 import FacultyModel from "../models/faculty.model.js";
 import GroupModel from "../models/group.model.js";
 import SubjectModel from "../models/subject.model.js";
-import UserModel from "../models/user.model.js";
+
+const SUBJECT_POPULATE = [
+    {
+        path: "facultyId",
+        select: "name dept"
+    },
+    {
+        path: "groupId",
+        select: "year dept sec"
+    }
+];
 
 export const getSubjectController = async (req, res, next) => {
     try {
@@ -18,6 +28,8 @@ export const getSubjectController = async (req, res, next) => {
             throw new ApiError(403, "Forbidden");
         }
 
+        await subject.populate(SUBJECT_POPULATE);
+
         res.status(200).send({
             success: true,
             message: "Subject Found",
@@ -32,7 +44,7 @@ export const getSubjectController = async (req, res, next) => {
 
 export const getSubjectsController = async (req, res, next) => {
     try {
-        const subjects = await SubjectModel.find({ groupId: req.user.groupId });
+        const subjects = await SubjectModel.find({ groupId: req.user.groupId }).populate(SUBJECT_POPULATE);
 
         res.status(200).send({
             success: true,
@@ -52,27 +64,28 @@ export const createSubjectController = async (req, res, next) => {
 
         const moderatorId = req.user._id;
 
-        if(!name || !credits) {
+        if(!name || credits === undefined || !facultyId) {
             throw new ApiError(400, "Missing required fields");
         }
 
         const faculty = await FacultyModel.findById(facultyId);
 
         if(!faculty) {
-            throw new ApiError(400, "Faculty does not exist");
+            throw new ApiError(404, "Faculty does not exist");
         }
 
         const group = await GroupModel.findOne({ moderatorId });
         if(!group) {
-            throw new ApiError(400, "You are not moderator of any Group");
+            throw new ApiError(403, "You are not moderator of any Group");
         }
 
         let subject = await SubjectModel.findOne({ name, groupId: group._id});
         if(subject) {
-            throw new ApiError(400, "Subject already exists");
+            throw new ApiError(409, "Subject already exists");
         }
 
         subject = await SubjectModel.create({ name, facultyId, credits, groupId: group._id});
+        await subject.populate(SUBJECT_POPULATE);
 
         res.status(201).send({
             success: true,
@@ -123,6 +136,7 @@ export const updateSubjectController = async (req, res, next) => {
         }
 
         await subject.save();
+        await subject.populate(SUBJECT_POPULATE);
 
         res.status(200).send({
             success: true,
@@ -148,7 +162,8 @@ export const deleteSubjectController = async (req, res, next) => {
             throw new ApiError(403, "Forbidden");
         }
 
-        await SubjectModel.findByIdAndDelete(req.params.subjectId);
+        await subject.deleteOne();
+        await subject.populate(SUBJECT_POPULATE);
 
         res.status(200).send({
             success: true,
