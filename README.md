@@ -850,6 +850,28 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Period retrieved successfully",
+    "data": {
+        "period": {
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "subjectId": {
+                "_id": "6a576c3ae498e5d967e02dba",
+                "name": "Subejct Test3"
+            },
+            "groupId": "6a5632a7afae49887f9e5b5d",
+            "startTime": "2026-07-16T09:00:00.000Z",
+            "endTime": "2026-07-16T09:50:00.000Z",
+            "createdBy": {
+                "_id": "6a567e0de3426001b74d7292",
+                "rollNo": 425054,
+                "name": "Nikhil"
+            },
+            "createdAt": "2026-07-15T17:04:08.525Z",
+            "updatedAt": "2026-07-15T17:04:08.525Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -868,8 +890,32 @@ Required
 ### Response
 
 ```json
-[
-]
+{
+    "success": true,
+    "message": "Periods retrieved successfully",
+    "data": {
+        "periods": [
+            {
+                "_id": "6a57bd881c45143ba32c6a0a",
+                "subjectId": {
+                    "_id": "6a576c3ae498e5d967e02dba",
+                    "name": "Subejct Test3"
+                },
+                "groupId": "6a5632a7afae49887f9e5b5d",
+                "startTime": "2026-07-16T09:00:00.000Z",
+                "endTime": "2026-07-16T09:50:00.000Z",
+                "createdBy": {
+                    "_id": "6a567e0de3426001b74d7292",
+                    "rollNo": 425054,
+                    "name": "Nikhil"
+                },
+                "createdAt": "2026-07-15T17:04:08.525Z",
+                "updatedAt": "2026-07-15T17:04:08.525Z",
+                "__v": 0
+            }
+        ]
+    }
+}
 ```
 
 ---
@@ -887,8 +933,32 @@ Required
 ### Response
 
 ```json
-[
-]
+{
+    "success": true,
+    "message": "Periods retrieved successfully",
+    "data": {
+        "periods": [
+            {
+                "_id": "6a57bd881c45143ba32c6a0a",
+                "subjectId": {
+                    "_id": "6a576c3ae498e5d967e02dba",
+                    "name": "Subejct Test3"
+                },
+                "groupId": "6a5632a7afae49887f9e5b5d",
+                "startTime": "2026-07-16T09:00:00.000Z",
+                "endTime": "2026-07-16T09:50:00.000Z",
+                "createdBy": {
+                    "_id": "6a567e0de3426001b74d7292",
+                    "rollNo": 425054,
+                    "name": "Nikhil"
+                },
+                "createdAt": "2026-07-15T17:04:08.525Z",
+                "updatedAt": "2026-07-15T17:04:08.525Z",
+                "__v": 0
+            }
+        ]
+    }
+}
 ```
 
 ---
@@ -907,6 +977,8 @@ Required
 
 ```json
 {
+    "startTime": "2026-07-16T09:00:00.000Z",
+    "endTime": "2026-07-16T09:50:00.000Z"
 }
 ```
 
@@ -914,6 +986,28 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Period created Successfully",
+    "data": {
+        "period": {
+            "subjectId": {
+                "_id": "6a576c3ae498e5d967e02dba",
+                "name": "Subejct Test3"
+            },
+            "groupId": "6a5632a7afae49887f9e5b5d",
+            "startTime": "2026-07-16T09:00:00.000Z",
+            "endTime": "2026-07-16T09:50:00.000Z",
+            "createdBy": {
+                "_id": "6a567e0de3426001b74d7292",
+                "rollNo": 425054,
+                "name": "Nikhil"
+            },
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "createdAt": "2026-07-15T17:04:08.525Z",
+            "updatedAt": "2026-07-15T17:04:08.525Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -933,6 +1027,8 @@ Required
 
 ```json
 {
+    "startTime": "2026-08-16T09:00:00.000Z",
+    "endTime": "2026-08-16T09:50:00.000Z"
 }
 ```
 
@@ -940,6 +1036,28 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Period Updated Successfully",
+    "data": {
+        "period": {
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "subjectId": {
+                "_id": "6a576c3ae498e5d967e02dba",
+                "name": "Subejct Test3"
+            },
+            "groupId": "6a5632a7afae49887f9e5b5d",
+            "startTime": "2026-08-16T09:00:00.000Z",
+            "endTime": "2026-08-16T09:50:00.000Z",
+            "createdBy": {
+                "_id": "6a567e0de3426001b74d7292",
+                "rollNo": 425054,
+                "name": "Nikhil"
+            },
+            "createdAt": "2026-07-15T17:04:08.525Z",
+            "updatedAt": "2026-07-15T17:56:19.537Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -959,6 +1077,28 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Period deleted successfully",
+    "data": {
+        "period": {
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "subjectId": {
+                "_id": "6a576c3ae498e5d967e02dba",
+                "name": "Subejct Test3"
+            },
+            "groupId": "6a5632a7afae49887f9e5b5d",
+            "startTime": "2026-08-16T09:00:00.000Z",
+            "endTime": "2026-08-16T09:50:00.000Z",
+            "createdBy": {
+                "_id": "6a567e0de3426001b74d7292",
+                "rollNo": 425054,
+                "name": "Nikhil"
+            },
+            "createdAt": "2026-07-15T17:04:08.525Z",
+            "updatedAt": "2026-07-15T17:56:19.537Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
