@@ -27,7 +27,7 @@ The backend provides functionality for:
 # Base URL
 
 ```
-
+https://class-management-backend-53hu.onrender.com/
 ```
 
 ---
