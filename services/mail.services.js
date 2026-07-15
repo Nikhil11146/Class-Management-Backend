@@ -7,14 +7,10 @@ const transporter = nodemailer.createTransport({
     auth: {
         user: EMAIL,
         pass: APP_PASSWORD
-    },
-    connectionTimeout: 5000,
-    greetingTimeout: 5000,
-    socketTimeout: 5000
+    }
 })
 
 export const sendOtpMail = async (email, otp) => {
-    console.log(`\n========================================\n[OTP Verification] TO: ${email} | OTP: ${otp}\n========================================\n`);
     try {
         await transporter.sendMail({
             from: `"ClassSync" <${EMAIL}>`,
@@ -34,8 +30,7 @@ export const sendOtpMail = async (email, otp) => {
             `
         });
     } catch (err) {
-        console.error("Nodemailer failed to send email. Error detail:", err.message);
-        console.log("Proceeding with registration flow using the logged OTP above.");
+        throw err;
     }
 }
 

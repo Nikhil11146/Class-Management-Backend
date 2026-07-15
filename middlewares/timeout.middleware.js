@@ -1,6 +1,6 @@
 import ApiError from "../classes/apiError.class.js";
 
-export const timeoutMiddleware = (seconds = 60) => {
+export const timeoutMiddleware = (seconds = 15) => {
     return (req, res, next) => {
         const timeoutId = setTimeout(() => {
             if (!res.headersSent) {

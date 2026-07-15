@@ -10,7 +10,7 @@ import {authMiddleware} from "../middlewares/auth.middleware.js";
 import {timeoutMiddleware} from "../middlewares/timeout.middleware.js";
 
 const authRouter = Router();
-authRouter.use(timeoutMiddleware(60));
+authRouter.use(timeoutMiddleware(15));
 
 authRouter.post('/send-otp', sendOtpController);
 authRouter.post('/register', registerController);
