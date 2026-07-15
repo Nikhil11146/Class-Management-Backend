@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
     tokenVersion: {
         type: Number,
         default: 1
+    },
+    profilePhoto: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true

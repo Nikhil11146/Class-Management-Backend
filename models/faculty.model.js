@@ -11,6 +11,10 @@ const facultySchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['CSE', 'ECE', 'EEE', 'CIVIL', 'MECH', 'BIOTECH', 'CHEM']
+    },
+    profilePhoto: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true
