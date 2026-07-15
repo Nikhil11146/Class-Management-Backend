@@ -411,6 +411,40 @@ Not Required
 
 ---
 
+## Verify OTP
+
+```
+POST /api/v1/auth/verify-otp
+```
+
+### Authentication
+
+Not Required
+
+### Request Body
+
+```json
+{
+    "email" : "user@gmail.com",
+    "otp" : "123456"
+}
+```
+
+### Response
+
+```json
+{
+    "success": true,
+    "message": "OTP Verified Succesfully",
+}
+```
+
+### Notes
+
+*
+
+---
+
 
 ## Logout All
 
