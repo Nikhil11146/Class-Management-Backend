@@ -411,15 +411,22 @@ Not Required
 
 ---
 
-## Logout
+
+### Notes
+
+*
+
+---
+
+## logout All
 
 ```
-POST /api/v1/auth/logout
+POST /api/v1/auth/logout-all
 ```
 
 ### Authentication
 
-Required
+Token Required
 
 ### Request Body
 
@@ -432,25 +439,35 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Logged Out of all devices successfully"
 }
 ```
 
+### Notes
+
+*
+
 ---
 
-## Refresh Token
+
+## logout All
 
 ```
-POST /api/v1/auth/refresh
+POST /api/v1/auth/forgot-password
 ```
 
 ### Authentication
 
-Refresh Token Required
+Not Required
 
 ### Request Body
 
 ```json
 {
+    "email": "user@gmail.com",
+    "otp": "756910",
+    "password": "newPassword"
 }
 ```
 
@@ -458,10 +475,17 @@ Refresh Token Required
 
 ```json
 {
+    "success": true,
+    "message": "Updated Password"
 }
 ```
 
+### Notes
+
+*
+
 ---
+
 
 # SUBJECT
 
