@@ -593,12 +593,21 @@ subjectId
     "data": {
         "subject": {
             "_id": "6a576c01e498e5d967e02db9",
-            "name": "Subejct Test2",
-            "facultyId": "6a5768c773d4eb3b094835a7",
-            "credits": 3,
-            "groupId": "6a5632a7afae49887f9e5b5d",
+            "name": "Subejct Test10",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 0,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
             "createdAt": "2026-07-15T11:16:17.940Z",
-            "updatedAt": "2026-07-15T11:16:17.940Z",
+            "updatedAt": "2026-07-15T14:54:22.381Z",
             "__v": 0
         }
     }
@@ -634,21 +643,39 @@ Required
             {
                 "_id": "6a576c01e498e5d967e02db9",
                 "name": "Subejct Test10",
-                "facultyId": "6a5768c773d4eb3b094835a7",
+                "facultyId": {
+                    "_id": "6a5768c773d4eb3b094835a7",
+                    "name": "Faculty Test",
+                    "dept": "CSE"
+                },
                 "credits": 0,
-                "groupId": "6a5632a7afae49887f9e5b5d",
+                "groupId": {
+                    "_id": "6a5632a7afae49887f9e5b5d",
+                    "year": 2,
+                    "dept": "CSE",
+                    "sec": "B"
+                },
                 "createdAt": "2026-07-15T11:16:17.940Z",
                 "updatedAt": "2026-07-15T14:54:22.381Z",
                 "__v": 0
             },
             {
-                "_id": "6a576c3ae498e5d967e02dba",
-                "name": "Subejct Test3",
-                "facultyId": "6a5768c773d4eb3b094835a7",
+                "_id": "6a577443e1e782fee49f5bd4",
+                "name": "Subejct Test4",
+                "facultyId": {
+                    "_id": "6a5768c773d4eb3b094835a7",
+                    "name": "Faculty Test",
+                    "dept": "CSE"
+                },
                 "credits": 3,
-                "groupId": "6a5632a7afae49887f9e5b5d",
-                "createdAt": "2026-07-15T11:17:14.282Z",
-                "updatedAt": "2026-07-15T11:17:14.282Z",
+                "groupId": {
+                    "_id": "6a5632a7afae49887f9e5b5d",
+                    "year": 2,
+                    "dept": "CSE",
+                    "sec": "B"
+                },
+                "createdAt": "2026-07-15T11:51:31.310Z",
+                "updatedAt": "2026-07-15T11:51:31.310Z",
                 "__v": 0
             }
         ]
@@ -672,7 +699,7 @@ Required
 
 ```json
 { 
-    "name": "Subejct Test3", 
+    "name": "Subejct Test7", 
     "facultyId": "6a5768c773d4eb3b094835a7",
     "credits": 3,
     "moderatorId": "6a567e0de3426001b74d7292"
@@ -684,16 +711,25 @@ Required
 ```json
 {
     "success": true,
-    "message": "Subejct created successfully",
+    "message": "Subject created successfully",
     "data": {
         "subject": {
-            "name": "Subejct Test3",
-            "facultyId": "6a5768c773d4eb3b094835a7",
+            "name": "Subejct Test7",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
             "credits": 3,
-            "groupId": "6a5632a7afae49887f9e5b5d",
-            "_id": "6a576c3ae498e5d967e02dba",
-            "createdAt": "2026-07-15T11:17:14.282Z",
-            "updatedAt": "2026-07-15T11:17:14.282Z",
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "_id": "6a57b215e033bb2010bd20e2",
+            "createdAt": "2026-07-15T16:15:17.414Z",
+            "updatedAt": "2026-07-15T16:15:17.414Z",
             "__v": 0
         }
     }
@@ -732,9 +768,18 @@ Required
         "subject": {
             "_id": "6a576c01e498e5d967e02db9",
             "name": "Subejct Test10",
-            "facultyId": "6a5768c773d4eb3b094835a7",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
             "credits": 0,
-            "groupId": "6a5632a7afae49887f9e5b5d",
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
             "createdAt": "2026-07-15T11:16:17.940Z",
             "updatedAt": "2026-07-15T14:54:22.381Z",
             "__v": 0
@@ -763,13 +808,22 @@ Required
     "message": "Subject deleted successfully",
     "data": {
         "subject": {
-            "_id": "6a576aa4501ac19f16fcf2ee",
-            "name": "Subejct Test",
-            "facultyId": "6a5768c773d4eb3b094835a7",
-            "credits": 3,
-            "groupId": "6a5632a7afae49887f9e5b5d",
-            "createdAt": "2026-07-15T11:10:28.551Z",
-            "updatedAt": "2026-07-15T11:10:28.551Z",
+            "_id": "6a576c01e498e5d967e02db9",
+            "name": "Subejct Test10",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 0,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "createdAt": "2026-07-15T11:16:17.940Z",
+            "updatedAt": "2026-07-15T14:54:22.381Z",
             "__v": 0
         }
     }
