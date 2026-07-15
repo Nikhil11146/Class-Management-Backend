@@ -10,7 +10,23 @@ import { JWT_SECRET, JWT_EXPIRES_IN } from "../config/env.js";
 
 export const sendOtpController = async (req, res, next) => {
     try {
-        const { email } = req.body;
+        const { email, flow } = req.body;
+
+        if (!email) {
+            throw new ApiError(400, "Email is required");
+        }
+
+        if (flow === 'forgot-password') {
+            const userExists = await UserModel.exists({ email });
+            if (!userExists) {
+                throw new ApiError(404, "Email is not registered");
+            }
+        } else if (flow === 'signup') {
+            const userExists = await UserModel.exists({ email });
+            if (userExists) {
+                throw new ApiError(409, "Email is already registered");
+            }
+        }
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -38,6 +54,10 @@ export const registerController = async (req, res, next) => {
 
         if (!rollNo || !name || !email || !password || !group || !otp || !group.dept || !group.year || !group.sec) {
             throw new ApiError(400, "Missing required fields");
+        }
+
+        if (rollNo.toString().trim().length !== 6) {
+            throw new ApiError(400, "Roll number must be exactly 6 digits");
         }
 
         if (await UserModel.exists({ email }).session(session) || await UserModel.exists({ rollNo }).session(session)) {
@@ -118,7 +138,7 @@ export const logInController = async (req, res, next) => {
 
         const isCorrectPassword = await bcrypt.compare(password, user.password);
         if(!isCorrectPassword) {
-            throw new ApiError(401, "Incorrect email or password");
+            throw new ApiError(401, "Incorrect password");
         }
 
         const token = jwt.sign({userId: user._id, role: user.role, tokenVersion: user.tokenVersion}, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN});

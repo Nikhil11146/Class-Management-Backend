@@ -7,9 +7,11 @@ if(!DB_URI) {
 
 export const connectDB = async () => {
     try {
+        mongoose.set('bufferCommands', false);
         await mongoose.connect(DB_URI);
         console.log('MongoDB Connected Successfully.');
     } catch (e) {
-        console.error(e);
+        console.error('MongoDB Connection Error:', e);
+        process.exit(1);
     }
 }
