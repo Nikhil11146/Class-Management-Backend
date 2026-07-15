@@ -9,5 +9,6 @@ export const {
     EMAIL,
     APP_PASSWORD,
     JWT_SECRET,
-    JWT_EXPIRES_IN
+    JWT_EXPIRES_IN,
+    RENDER_URL
 } = process.env;

@@ -4,6 +4,7 @@ import { PORT, CLIENT_URL } from './config/env.js';
 import {connectDB} from "./database/mongodb.js";
 import routesRouter from "./routes/routes.controller.js";
 import {errorMiddleware} from "./middlewares/error.middleware.js";
+import { startKeepAlive } from './services/keepAlive.js';
 
 const app = express();
 
@@ -26,5 +27,5 @@ await connectDB();
 
 app.listen(PORT, async () => {
     console.log(`Server started on port: ${PORT}, `);
-
+    startKeepAlive();
 })
