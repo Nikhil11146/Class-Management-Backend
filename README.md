@@ -412,12 +412,6 @@ Not Required
 ---
 
 
-### Notes
-
-*
-
----
-
 ## Logout All
 
 ```
