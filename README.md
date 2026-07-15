@@ -418,7 +418,7 @@ Not Required
 
 ---
 
-## logout All
+## Logout All
 
 ```
 POST /api/v1/auth/logout-all
@@ -451,7 +451,7 @@ Token Required
 ---
 
 
-## logout All
+## Forgot Password
 
 ```
 POST /api/v1/auth/forgot-password
