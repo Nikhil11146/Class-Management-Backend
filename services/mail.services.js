@@ -1,20 +1,12 @@
-import nodemailer from 'nodemailer';
-import {EMAIL, APP_PASSWORD, BREVO_LOGIN, BREVO_SMTP_KEY, FROM_EMAIL} from '../config/env.js'
+import { Resend } from 'resend';
+import { RESEND_API_KEY, FROM_EMAIL } from '../config/env.js';
 
-export const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com",
-    port: 587,
-    secure: false,
-    auth: {
-        user: BREVO_LOGIN,
-        pass: BREVO_SMTP_KEY
-    }
-});
+export const resend = new Resend(RESEND_API_KEY);
 
 export const sendOtpMail = async (email, otp) => {
     try {
-        await transporter.sendMail({
-            from: `"Class Management" <${FROM_EMAIL}>`,
+        const { data, error } = await resend.emails.send({
+            from: `Class Management <${FROM_EMAIL}>`,
             to: email,
             subject: "Email Verification",
             html: `
@@ -30,8 +22,13 @@ export const sendOtpMail = async (email, otp) => {
                 <p>If you didn't request this, you can safely ignore this email.</p>
             `
         });
+        
+        if (error) {
+            throw error;
+        }
+        
+        return data;
     } catch (err) {
         throw err;
     }
 }
-

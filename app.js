@@ -5,7 +5,7 @@ import {connectDB} from "./database/mongodb.js";
 import routesRouter from "./routes/routes.controller.js";
 import {errorMiddleware} from "./middlewares/error.middleware.js";
 import { startKeepAlive } from './services/keepAlive.js';
-import {transporter} from "./services/mail.services.js";
+import {resend} from "./services/mail.services.js";
 
 const app = express();
 
@@ -14,8 +14,11 @@ app.use(cors());
 
 app.get("/test-mail", async (req, res) => {
     try {
-        await transporter.verify();
-        res.send("SMTP OK");
+        const { data, error } = await resend.domains.list();
+        if (error) {
+            throw error;
+        }
+        res.send("Resend OK");
     } catch (e) {
         console.error(e);
         res.send(e.message);
