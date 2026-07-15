@@ -514,6 +514,55 @@ Not Required
 
 ---
 
+# FACULTY
+
+---
+
+## Create Faculty
+
+```
+POST /api/v1/faculties
+```
+
+### Authentication
+
+Not Required
+
+### Request Body
+
+```json
+{
+    "name": "Faculty Test2",
+    "dept": "CSE"
+}
+```
+
+### Response
+
+```json
+{
+    "success": true,
+    "message": "Faculty created successfully",
+    "data": {
+        "faculty": {
+            "name": "Faculty Test2",
+            "dept": "CSE",
+            "_id": "6a5768ec73d4eb3b094835a9",
+            "createdAt": "2026-07-15T11:03:08.040Z",
+            "updatedAt": "2026-07-15T11:03:08.040Z",
+            "__v": 0
+        }
+    }
+}
+```
+
+### Notes
+
+*
+
+
+---
+
 
 # SUBJECT
 
@@ -539,6 +588,29 @@ subjectId
 
 ```json
 {
+    "success": true,
+    "message": "Subject Found",
+    "data": {
+        "subject": {
+            "_id": "6a576c01e498e5d967e02db9",
+            "name": "Subejct Test10",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 0,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "createdAt": "2026-07-15T11:16:17.940Z",
+            "updatedAt": "2026-07-15T14:54:22.381Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -563,8 +635,52 @@ Required
 ### Response
 
 ```json
-[
-]
+{
+    "success": true,
+    "message": "Subjects Found",
+    "data": {
+        "subjects": [
+            {
+                "_id": "6a576c01e498e5d967e02db9",
+                "name": "Subejct Test10",
+                "facultyId": {
+                    "_id": "6a5768c773d4eb3b094835a7",
+                    "name": "Faculty Test",
+                    "dept": "CSE"
+                },
+                "credits": 0,
+                "groupId": {
+                    "_id": "6a5632a7afae49887f9e5b5d",
+                    "year": 2,
+                    "dept": "CSE",
+                    "sec": "B"
+                },
+                "createdAt": "2026-07-15T11:16:17.940Z",
+                "updatedAt": "2026-07-15T14:54:22.381Z",
+                "__v": 0
+            },
+            {
+                "_id": "6a577443e1e782fee49f5bd4",
+                "name": "Subejct Test4",
+                "facultyId": {
+                    "_id": "6a5768c773d4eb3b094835a7",
+                    "name": "Faculty Test",
+                    "dept": "CSE"
+                },
+                "credits": 3,
+                "groupId": {
+                    "_id": "6a5632a7afae49887f9e5b5d",
+                    "year": 2,
+                    "dept": "CSE",
+                    "sec": "B"
+                },
+                "createdAt": "2026-07-15T11:51:31.310Z",
+                "updatedAt": "2026-07-15T11:51:31.310Z",
+                "__v": 0
+            }
+        ]
+    }
+}
 ```
 
 ---
@@ -582,7 +698,11 @@ Required
 ### Request Body
 
 ```json
-{
+{ 
+    "name": "Subejct Test7", 
+    "facultyId": "6a5768c773d4eb3b094835a7",
+    "credits": 3,
+    "moderatorId": "6a567e0de3426001b74d7292"
 }
 ```
 
@@ -590,6 +710,29 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Subject created successfully",
+    "data": {
+        "subject": {
+            "name": "Subejct Test7",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 3,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "_id": "6a57b215e033bb2010bd20e2",
+            "createdAt": "2026-07-15T16:15:17.414Z",
+            "updatedAt": "2026-07-15T16:15:17.414Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -608,7 +751,10 @@ Required
 ### Request Body
 
 ```json
-{
+{ 
+    "name": "Subejct Test10", 
+    "facultyId": "6a5768c773d4eb3b094835a7",
+    "credits": 0
 }
 ```
 
@@ -616,6 +762,29 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Subject Updated successfully",
+    "data": {
+        "subject": {
+            "_id": "6a576c01e498e5d967e02db9",
+            "name": "Subejct Test10",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 0,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "createdAt": "2026-07-15T11:16:17.940Z",
+            "updatedAt": "2026-07-15T14:54:22.381Z",
+            "__v": 0
+        }
+    }
 }
 ```
 
@@ -635,6 +804,29 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Subject deleted successfully",
+    "data": {
+        "subject": {
+            "_id": "6a576c01e498e5d967e02db9",
+            "name": "Subejct Test10",
+            "facultyId": {
+                "_id": "6a5768c773d4eb3b094835a7",
+                "name": "Faculty Test",
+                "dept": "CSE"
+            },
+            "credits": 0,
+            "groupId": {
+                "_id": "6a5632a7afae49887f9e5b5d",
+                "year": 2,
+                "dept": "CSE",
+                "sec": "B"
+            },
+            "createdAt": "2026-07-15T11:16:17.940Z",
+            "updatedAt": "2026-07-15T14:54:22.381Z",
+            "__v": 0
+        }
+    }
 }
 ```
 

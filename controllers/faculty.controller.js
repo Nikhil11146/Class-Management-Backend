@@ -3,7 +3,7 @@ import FacultyModel from "../models/faculty.model.js";
 import GroupModel from "../models/group.model.js";
 import SubjectModel from "../models/subject.model.js";
 
-export const getFacultyController = (req, res, next) => {
+export const getFacultiesController = (req, res, next) => {
 
 }
 
