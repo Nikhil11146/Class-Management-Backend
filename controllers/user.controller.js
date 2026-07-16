@@ -97,10 +97,18 @@ export const updateProfileController = async (req, res, next) => {
 export const changePasswordController = async (req, res, next) => {
     try {
         const { currentPassword, newPassword } = req.body;
-        
+
+        if (!currentPassword || !newPassword) {
+            throw new ApiError(400, "currentPassword and newPassword are required");
+        }
+
         const user = await UserModel.findById(req.user._id).select("+password");
         if (!user) {
             throw new ApiError(404, "User not found");
+        }
+
+        if (!user.password) {
+            throw new ApiError(400, "Password not set for this account. Please use 'Forgot Password' to set a new one.");
         }
 
         const isCorrectPassword = await bcrypt.compare(currentPassword, user.password);
