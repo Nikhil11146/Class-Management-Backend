@@ -1,6 +1,6 @@
 import UserModel from '../models/user.model.js';
 import ApiError from "../classes/apiError.class.js";
-import { uploadToCloudinary } from '../utils/cloudinary.js';
+import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js';
 import bcrypt from "bcrypt";
 
 export const uploadProfilePhotoController = async (req, res, next) => {
@@ -9,6 +9,10 @@ export const uploadProfilePhotoController = async (req, res, next) => {
             throw new ApiError(400, "Please upload a photo");
         }
 
+        // Fetch the current user to get their old photo URL
+        const currentUser = await UserModel.findById(req.user._id).select('profilePhoto');
+        const oldPhotoUrl = currentUser?.profilePhoto;
+
         const result = await uploadToCloudinary(req.file.buffer, "cms/profiles");
 
         const user = await UserModel.findByIdAndUpdate(
@@ -16,6 +20,11 @@ export const uploadProfilePhotoController = async (req, res, next) => {
             { profilePhoto: result.secure_url },
             { new: true }
         );
+
+        // Delete the old Cloudinary asset (fire-and-forget)
+        if (oldPhotoUrl) {
+            deleteFromCloudinary(oldPhotoUrl);
+        }
 
         res.status(200).send({
             success: true,
@@ -50,11 +59,18 @@ export const getProfileController = async (req, res, next) => {
 
 export const updateProfileController = async (req, res, next) => {
     try {
-        const { name, profilePhoto } = req.body;
+        const { name, rollNo, profilePhoto } = req.body;
         
         const updateFields = {};
         if (name !== undefined) updateFields.name = name;
         if (profilePhoto !== undefined) updateFields.profilePhoto = profilePhoto;
+        if (rollNo !== undefined) {
+            const parsed = Number(rollNo);
+            if (isNaN(parsed)) {
+                throw new ApiError(400, "rollNo must be a valid number");
+            }
+            updateFields.rollNo = parsed;
+        }
 
         const user = await UserModel.findByIdAndUpdate(
             req.user._id,
