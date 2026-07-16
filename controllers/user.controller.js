@@ -49,11 +49,15 @@ export const getProfileController = async (req, res, next) => {
 
 export const updateProfileController = async (req, res, next) => {
     try {
-        const { name } = req.body;
+        const { name, profilePhoto } = req.body;
         
+        const updateFields = {};
+        if (name !== undefined) updateFields.name = name;
+        if (profilePhoto !== undefined) updateFields.profilePhoto = profilePhoto;
+
         const user = await UserModel.findByIdAndUpdate(
             req.user._id,
-            { name },
+            updateFields,
             { new: true, runValidators: true }
         );
 
