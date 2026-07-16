@@ -60,7 +60,7 @@ export const registerController = async (req, res, next) => {
             throw new ApiError(400, "Roll number must be exactly 6 digits");
         }
 
-        if (await UserModel.exists({ email }).session(session) || await UserModel.exists({ rollNo }).session(session)) {
+        if (await UserModel.exists({ email }).session(session)) {
             throw new ApiError(409, "User already exists");
         }
 
