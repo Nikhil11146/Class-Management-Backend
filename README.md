@@ -1322,6 +1322,18 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Profile retrieved successfully",
+    "data": {
+        "user": {
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "name": "Nikhil",
+            "email": "user@example.com",
+            "rollNo": 425054,
+            "role": "ROLE_USER",
+            "profilePhoto": "https://res.cloudinary.com/..."
+        }
+    }
 }
 ```
 
@@ -1341,6 +1353,7 @@ Required
 
 ```json
 {
+    "name": "Nikhil Updated"
 }
 ```
 
@@ -1348,6 +1361,18 @@ Required
 
 ```json
 {
+    "success": true,
+    "message": "Profile updated successfully",
+    "data": {
+        "user": {
+            "_id": "6a57bd881c45143ba32c6a0a",
+            "name": "Nikhil Updated",
+            "email": "user@example.com",
+            "rollNo": 425054,
+            "role": "ROLE_USER",
+            "profilePhoto": "https://res.cloudinary.com/..."
+        }
+    }
 }
 ```
 
