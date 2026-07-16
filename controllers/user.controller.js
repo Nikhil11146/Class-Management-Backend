@@ -1,6 +1,7 @@
 import UserModel from '../models/user.model.js';
 import ApiError from "../classes/apiError.class.js";
 import { uploadToCloudinary } from '../utils/cloudinary.js';
+import bcrypt from "bcrypt";
 
 export const uploadProfilePhotoController = async (req, res, next) => {
     try {
@@ -71,6 +72,32 @@ export const updateProfileController = async (req, res, next) => {
             data: {
                 user
             }
+        });
+    } catch (e) {
+        next(e);
+    }
+};
+
+export const changePasswordController = async (req, res, next) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        
+        const user = await UserModel.findById(req.user._id).select("+password");
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        const isCorrectPassword = await bcrypt.compare(currentPassword, user.password);
+        if (!isCorrectPassword) {
+            throw new ApiError(400, "Incorrect current password");
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+        await user.save();
+
+        res.status(200).send({
+            success: true,
+            message: "Password changed successfully"
         });
     } catch (e) {
         next(e);
