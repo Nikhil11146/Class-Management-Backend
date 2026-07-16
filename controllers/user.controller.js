@@ -1,4 +1,5 @@
 import UserModel from '../models/user.model.js';
+import GroupModel from '../models/group.model.js';
 import ApiError from "../classes/apiError.class.js";
 import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js';
 import bcrypt from "bcrypt";
@@ -40,7 +41,7 @@ export const uploadProfilePhotoController = async (req, res, next) => {
 
 export const getProfileController = async (req, res, next) => {
     try {
-        const user = await UserModel.findById(req.user._id);
+        const user = await UserModel.findById(req.user._id).populate('groupId');
         if (!user) {
             throw new ApiError(404, "User not found");
         }
@@ -59,7 +60,7 @@ export const getProfileController = async (req, res, next) => {
 
 export const updateProfileController = async (req, res, next) => {
     try {
-        const { name, rollNo, profilePhoto } = req.body;
+        const { name, rollNo, profilePhoto, group } = req.body;
         
         const updateFields = {};
         if (name !== undefined) updateFields.name = name;
@@ -72,11 +73,33 @@ export const updateProfileController = async (req, res, next) => {
             updateFields.rollNo = parsed;
         }
 
+        // Update group reference if group data is provided
+        if (group && group.year && group.dept && group.sec) {
+            const allowedDepts = ['CSE', 'EEE', 'ECE', 'MME', 'MEC', 'BTH', 'CHEM', 'CIVIL'];
+            if (!allowedDepts.includes(group.dept.toUpperCase())) {
+                throw new ApiError(400, `Invalid department. Must be one of: ${allowedDepts.join(', ')}`);
+            }
+            // Find or create the group document
+            let dbGroup = await GroupModel.findOne({
+                year: Number(group.year),
+                dept: group.dept.toUpperCase(),
+                sec: group.sec.toUpperCase(),
+            });
+            if (!dbGroup) {
+                dbGroup = await GroupModel.create({
+                    year: Number(group.year),
+                    dept: group.dept.toUpperCase(),
+                    sec: group.sec.toUpperCase(),
+                });
+            }
+            updateFields.groupId = dbGroup._id;
+        }
+
         const user = await UserModel.findByIdAndUpdate(
             req.user._id,
             updateFields,
             { new: true, runValidators: true }
-        );
+        ).populate('groupId');
 
         if (!user) {
             throw new ApiError(404, "User not found");
