@@ -8,12 +8,11 @@ const groupSchema = new mongoose.Schema({
     dept: {
         type: String,
         required: true,
-        enum: ['CSE', 'ECE', 'EEE', 'CIVIL', 'MEC', 'BTH', 'CHEM']
+        enum: ['CSE', 'ECE', 'EEE', 'CIVIL', 'MEC', 'BTH', 'CHEM', 'SELF']
     },
     sec: {
         type: String,
-        required: true,
-        enum: ["A", "B", "C", "D"],
+        required: true
     },
     moderatorId: {
         type: mongoose.Schema.Types.ObjectId,

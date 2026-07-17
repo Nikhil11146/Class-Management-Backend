@@ -50,10 +50,14 @@ export const registerController = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { rollNo, name, email, password, group, otp } = req.body;
+        const { rollNo, name, email, password, group, otp, isSelf } = req.body;
 
-        if (!rollNo || !name || !email || !password || !group || !otp || !group.dept || !group.year || !group.sec) {
+        if (!rollNo || !name || !email || !password || !otp) {
             throw new ApiError(400, "Missing required fields");
+        }
+
+        if (!isSelf && (!group || !group.dept || !group.year || !group.sec)) {
+            throw new ApiError(400, "Missing required group fields");
         }
 
         if (rollNo.toString().trim().length !== 6) {
@@ -76,15 +80,26 @@ export const registerController = async (req, res, next) => {
             throw new ApiError(400, 'Incorrect OTP');
         }
 
-        let dbGroup = await GroupModel.findOne(group).session(session);
-
-        if (!dbGroup) {
+        let dbGroup;
+        
+        if (isSelf) {
+            // Self-managed users get their own unique group and act as the moderator
             dbGroup = new GroupModel({
-                year: Number(group.year),
-                dept: group.dept,
-                sec: group.sec
+                year: new Date().getFullYear(),
+                dept: 'SELF',
+                sec: email // Email is unique, ensuring a unique index (year, dept, sec)
             });
             await dbGroup.save({ session });
+        } else {
+            dbGroup = await GroupModel.findOne(group).session(session);
+            if (!dbGroup) {
+                dbGroup = new GroupModel({
+                    year: Number(group.year),
+                    dept: group.dept,
+                    sec: group.sec
+                });
+                await dbGroup.save({ session });
+            }
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -95,9 +110,15 @@ export const registerController = async (req, res, next) => {
             email,
             password: hashedPassword,
             groupId: dbGroup._id,
-            role: "ROLE_USER"
+            role: isSelf ? "ROLE_MODERATOR" : "ROLE_USER"
         });
         await newUser.save({ session });
+        
+        if (isSelf) {
+            dbGroup.moderatorId = newUser._id;
+            await dbGroup.save({ session });
+        }
+
         await OtpModel.deleteOne({ email }, { session });
 
         const token = jwt.sign({userId: newUser._id, role: newUser.role, tokenVersion: 1}, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN})

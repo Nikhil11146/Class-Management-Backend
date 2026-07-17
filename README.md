@@ -56,10 +56,13 @@ Represents a class/section.
 | ------------ | --------------- | -------- | ------ | ---------------------- |
 | _id          | ObjectId        | ✓        | -      | MongoDB ID             |
 | year         | Number          | ✓        | -      | Academic Year          |
-| dept         | String          | ✓        | -      | Department             |
-| sec          | String          | ✓        | -      | Section                |
+| dept         | String          | ✓        | -      | Department (`SELF` supported) |
+| sec          | String          | ✓        | -      | Section (or Email for SELF groups) |
 | moderatorId  | ObjectId (User) | ✓        | -      | Moderator of the class |
 | studentCount | Number          | ✓        | -      | Total students         |
+
+> **Note on Self-Managed Mode**: 
+> Users can sign up as "Self-Managed" (`isSelf: true`). In this mode, the backend dynamically generates a private Group for them where `dept = 'SELF'` and `sec = <user_email>`. This ensures a unique index and allows them to act as a private `ROLE_MODERATOR` with full capabilities over their own private schedule and subjects.
 
 ### Relationships
 
