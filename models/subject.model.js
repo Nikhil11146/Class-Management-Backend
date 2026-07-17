@@ -5,7 +5,14 @@ const subjectSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        maxlength: [25, "Maximum length: 25"]
+        maxlength: [50, "Maximum length: 50"]
+    },
+    code: {
+        type: String,
+        trim: true,
+        uppercase: true,
+        maxlength: [10, "Maximum length: 10"],
+        default: ''
     },
     facultyId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +24,11 @@ const subjectSchema = new mongoose.Schema({
         required: true,
         min: 0,
         max: 6
+    },
+    weeklyDays: {
+        // 0 = Monday, 1 = Tuesday, ..., 6 = Sunday
+        type: [Number],
+        default: []
     },
     groupId: {
         type: mongoose.Schema.Types.ObjectId,

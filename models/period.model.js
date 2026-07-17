@@ -19,6 +19,11 @@ const periodSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
+    room: {
+        type: String,
+        trim: true,
+        default: ''
+    },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -30,12 +35,12 @@ const periodSchema = new mongoose.Schema({
 
 periodSchema.index({
     groupId: 1,
-    date: 1
-})
+    startTime: 1
+});
 
 periodSchema.index({
     subjectId: 1,
-    date: 1
+    startTime: 1
 });
 
 const PeriodModel = mongoose.model('Period', periodSchema);

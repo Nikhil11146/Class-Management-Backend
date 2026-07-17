@@ -60,17 +60,15 @@ export const getSubjectsController = async (req, res, next) => {
 
 export const createSubjectController = async (req, res, next) => {
     try {
-        const { name, facultyId, credits } = req.body;
+        const { name, code, facultyId, credits, weeklyDays } = req.body;
 
         const moderatorId = req.user._id;
 
-        if(!name || credits === undefined || !facultyId) {
-            throw new ApiError(400, "Missing required fields");
+        if(!name || credits === undefined) {
+            throw new ApiError(400, "Missing required fields: name, credits");
         }
 
-        const faculty = await FacultyModel.findById(facultyId);
-
-        if(!faculty) {
+        if(facultyId && !(await FacultyModel.exists({ _id: facultyId }))) {
             throw new ApiError(404, "Faculty does not exist");
         }
 
@@ -84,7 +82,14 @@ export const createSubjectController = async (req, res, next) => {
             throw new ApiError(409, "Subject already exists");
         }
 
-        subject = await SubjectModel.create({ name, facultyId, credits, groupId: group._id});
+        subject = await SubjectModel.create({
+            name,
+            code: code || '',
+            facultyId: facultyId || undefined,
+            credits,
+            weeklyDays: Array.isArray(weeklyDays) ? weeklyDays : [],
+            groupId: group._id
+        });
         await subject.populate(SUBJECT_POPULATE);
 
         res.status(201).send({
@@ -101,14 +106,13 @@ export const createSubjectController = async (req, res, next) => {
 
 export const updateSubjectController = async (req, res, next) => {
     try {
-        const { name, facultyId, credits } = req.body;
+        const { name, code, facultyId, credits, weeklyDays } = req.body;
 
         let subject = await SubjectModel.findById(req.params.subjectId);
 
         if(!subject) {
             throw new ApiError(404, "No subject found");
         }
-
 
         if (!subject.groupId.equals(req.user.groupId)) {
             throw new ApiError(403, "Forbidden");
@@ -118,9 +122,11 @@ export const updateSubjectController = async (req, res, next) => {
             throw new ApiError(404, "Faculty does not exist");
         }
 
-
         if(facultyId) subject.facultyId = facultyId;
         if(credits !== undefined) subject.credits = credits;
+        if(code !== undefined) subject.code = code;
+        if(Array.isArray(weeklyDays)) subject.weeklyDays = weeklyDays;
+
         if (name) {
             const exists = await SubjectModel.exists({
                 name,
