@@ -27,6 +27,13 @@ const attendanceRecordSchema = new mongoose.Schema({
             validator: (v) => Array.isArray(v) && v.length > 0,
             message: 'Statuses must be a non-empty array'
         }
+    },
+    note: {
+        // Personal note for the user's own reference
+        type: String,
+        trim: true,
+        default: '',
+        maxlength: [300, 'Personal note cannot exceed 300 characters']
     }
 }, {
     timestamps: true
