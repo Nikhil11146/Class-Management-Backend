@@ -150,3 +150,25 @@ export const changePasswordController = async (req, res, next) => {
         next(e);
     }
 };
+
+export const deleteUserController = async (req, res, next) => {
+    try {
+        const user = await UserModel.findById(req.user._id);
+        if (!user) {
+            throw new ApiError(404, "User not found");
+        }
+
+        if (user.profilePhoto) {
+            deleteFromCloudinary(user.profilePhoto);
+        }
+
+        await UserModel.findByIdAndDelete(req.user._id);
+
+        res.status(200).send({
+            success: true,
+            message: "User account deleted successfully"
+        });
+    } catch (e) {
+        next(e);
+    }
+};

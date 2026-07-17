@@ -29,7 +29,11 @@ const announcementSchema = new mongoose.Schema({
     groupId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Group",
-        required: true
+        required: false
+    },
+    clg: {
+        type: String,
+        required: false
     }
 }, {
     timestamps: true

@@ -1,6 +1,12 @@
 import mongoose from 'mongoose';
 
 const groupSchema = new mongoose.Schema({
+    clg: {
+        type: String,
+        required: true,
+        uppercase: true,
+        trim: true
+    },
     year: {
         type: Number,
         required: true,
@@ -24,6 +30,7 @@ const groupSchema = new mongoose.Schema({
 
 groupSchema.index(
     {
+        clg: 1,
         year: 1,
         dept: 1,
         sec: 1

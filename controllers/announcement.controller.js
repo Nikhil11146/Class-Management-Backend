@@ -4,17 +4,23 @@ export const createAnnouncement = async (req, res) => {
     try {
         const { title, category, content, date, time } = req.body;
         const author = req.user._id;
-        const groupId = req.user.groupId;
-
-        const newAnnouncement = new Announcement({
+        
+        const announcementData = {
             title,
             category,
             content,
             date,
             time,
-            author,
-            groupId
-        });
+            author
+        };
+
+        if (req.user.role === 'ROLE_ADMIN') {
+            announcementData.clg = req.user.clg;
+        } else {
+            announcementData.groupId = req.user.groupId;
+        }
+
+        const newAnnouncement = new Announcement(announcementData);
         await newAnnouncement.save();
         await newAnnouncement.populate('author', 'name');
 
@@ -31,7 +37,12 @@ export const createAnnouncement = async (req, res) => {
 
 export const getAnnouncements = async (req, res) => {
     try {
-        const announcements = await Announcement.find({ groupId: req.user.groupId })
+        const announcements = await Announcement.find({
+            $or: [
+                { groupId: req.user.groupId },
+                { clg: req.user.clg }
+            ]
+        })
             .populate('author', 'name')
             .sort({ createdAt: -1 });
 
@@ -52,7 +63,13 @@ export const getAnnouncements = async (req, res) => {
 export const getAnnouncementById = async (req, res) => {
     try {
         const { id } = req.params;
-        const announcement = await Announcement.findOne({ _id: id, groupId: req.user.groupId }).populate('author', 'name');
+        const announcement = await Announcement.findOne({ 
+            _id: id, 
+            $or: [
+                { groupId: req.user.groupId },
+                { clg: req.user.clg }
+            ]
+        }).populate('author', 'name');
         if (!announcement) return res.status(404).json({ message: 'Announcement not found' });
 
         const formatted = {
@@ -69,8 +86,12 @@ export const getAnnouncementById = async (req, res) => {
 export const updateAnnouncement = async (req, res) => {
     try {
         const { id } = req.params;
+        const query = req.user.role === 'ROLE_ADMIN' 
+            ? { _id: id, clg: req.user.clg } 
+            : { _id: id, groupId: req.user.groupId };
+
         const updatedAnnouncement = await Announcement.findOneAndUpdate(
-            { _id: id, groupId: req.user.groupId },
+            query,
             req.body,
             { new: true }
         ).populate('author', 'name');
@@ -91,7 +112,11 @@ export const updateAnnouncement = async (req, res) => {
 export const deleteAnnouncement = async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedAnnouncement = await Announcement.findOneAndDelete({ _id: id, groupId: req.user.groupId });
+        const query = req.user.role === 'ROLE_ADMIN' 
+            ? { _id: id, clg: req.user.clg } 
+            : { _id: id, groupId: req.user.groupId };
+
+        const deletedAnnouncement = await Announcement.findOneAndDelete(query);
         if (!deletedAnnouncement) return res.status(404).json({ message: 'Announcement not found' });
         res.status(200).json({ message: 'Announcement deleted successfully' });
     } catch (error) {

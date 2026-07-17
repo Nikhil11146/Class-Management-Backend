@@ -50,9 +50,9 @@ export const registerController = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-        const { rollNo, name, email, password, group, otp, isSelf } = req.body;
+        const { rollNo, name, email, password, group, otp, isSelf, clg } = req.body;
 
-        if (!rollNo || !name || !email || !password || !otp) {
+        if (!rollNo || !name || !email || !password || !otp || !clg) {
             throw new ApiError(400, "Missing required fields");
         }
 
@@ -85,15 +85,17 @@ export const registerController = async (req, res, next) => {
         if (isSelf) {
             // Self-managed users get their own unique group and act as the moderator
             dbGroup = new GroupModel({
+                clg: clg.trim().toUpperCase(),
                 year: new Date().getFullYear(),
                 dept: 'SELF',
-                sec: email // Email is unique, ensuring a unique index (year, dept, sec)
+                sec: email // Email is unique, ensuring a unique index (clg, year, dept, sec)
             });
             await dbGroup.save({ session });
         } else {
-            dbGroup = await GroupModel.findOne(group).session(session);
+            dbGroup = await GroupModel.findOne({ ...group, clg: clg.trim().toUpperCase() }).session(session);
             if (!dbGroup) {
                 dbGroup = new GroupModel({
+                    clg: clg.trim().toUpperCase(),
                     year: Number(group.year),
                     dept: group.dept,
                     sec: group.sec
@@ -258,6 +260,25 @@ export const verifyOtpController = async (req, res, next) => {
             success: true,
             message: "OTP Verified Successfully"
         })
+    } catch (e) {
+        next(e);
+    }
+}
+
+export const getCollegesController = async (req, res, next) => {
+    try {
+        const query = req.query.search ? req.query.search.trim().toUpperCase() : '';
+        const regex = new RegExp(query, 'i');
+        
+        const colleges = await GroupModel.find({ clg: regex }).distinct('clg');
+        
+        res.status(200).send({
+            success: true,
+            message: "Colleges fetched successfully",
+            data: {
+                colleges
+            }
+        });
     } catch (e) {
         next(e);
     }

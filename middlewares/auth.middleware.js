@@ -2,6 +2,7 @@ import ApiError from "../classes/apiError.class.js";
 import {JWT_SECRET} from "../config/env.js";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/user.model.js";
+import GroupModel from "../models/group.model.js";
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -24,6 +25,12 @@ export const authMiddleware = async (req, res, next) => {
         }
 
         req.user = user;
+        
+        const group = await GroupModel.findById(user.groupId);
+        if (group) {
+            req.user.clg = group.clg;
+        }
+
         next();
     } catch (e) {
         next(e);
