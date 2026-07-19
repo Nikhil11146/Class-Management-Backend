@@ -1,13 +1,8 @@
 import ApiError from "../classes/apiError.class.js";
-import FacultyModel from "../models/faculty.model.js";
 import GroupModel from "../models/group.model.js";
 import SubjectModel from "../models/subject.model.js";
 
 const SUBJECT_POPULATE = [
-    {
-        path: "facultyId",
-        select: "name dept"
-    },
     {
         path: "groupId",
         select: "year dept sec"
@@ -60,16 +55,12 @@ export const getSubjectsController = async (req, res, next) => {
 
 export const createSubjectController = async (req, res, next) => {
     try {
-        const { name, code, facultyId, credits, weeklyDays } = req.body;
+        const { name, code, facultyName, credits, weeklyDays } = req.body;
 
         const moderatorId = req.user._id;
 
         if(!name || credits === undefined) {
             throw new ApiError(400, "Missing required fields: name, credits");
-        }
-
-        if(facultyId && !(await FacultyModel.exists({ _id: facultyId }))) {
-            throw new ApiError(404, "Faculty does not exist");
         }
 
         const group = await GroupModel.findOne({ moderatorId });
@@ -85,7 +76,7 @@ export const createSubjectController = async (req, res, next) => {
         subject = await SubjectModel.create({
             name,
             code: code || '',
-            facultyId: facultyId || undefined,
+            facultyName: facultyName || '',
             credits,
             weeklyDays: Array.isArray(weeklyDays) ? weeklyDays : [],
             groupId: group._id
@@ -106,7 +97,7 @@ export const createSubjectController = async (req, res, next) => {
 
 export const updateSubjectController = async (req, res, next) => {
     try {
-        const { name, code, facultyId, credits, weeklyDays } = req.body;
+        const { name, code, facultyName, credits, weeklyDays } = req.body;
 
         let subject = await SubjectModel.findById(req.params.subjectId);
 
@@ -118,11 +109,7 @@ export const updateSubjectController = async (req, res, next) => {
             throw new ApiError(403, "Forbidden");
         }
 
-        if(facultyId && !(await FacultyModel.exists({ _id: facultyId }))) {
-            throw new ApiError(404, "Faculty does not exist");
-        }
-
-        if(facultyId) subject.facultyId = facultyId;
+        if(facultyName !== undefined) subject.facultyName = facultyName;
         if(credits !== undefined) subject.credits = credits;
         if(code !== undefined) subject.code = code;
         if(Array.isArray(weeklyDays)) subject.weeklyDays = weeklyDays;

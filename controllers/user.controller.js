@@ -1,5 +1,10 @@
 import UserModel from '../models/user.model.js';
 import GroupModel from '../models/group.model.js';
+import AttendanceRecordModel from '../models/attendanceRecord.model.js';
+import SubjectModel from '../models/subject.model.js';
+import PeriodModel from '../models/period.model.js';
+import DayNoteModel from '../models/dayNote.model.js';
+import AnnouncementModel from '../models/announcement.model.js';
 import ApiError from "../classes/apiError.class.js";
 import { uploadToCloudinary, deleteFromCloudinary } from '../utils/cloudinary.js';
 import bcrypt from "bcrypt";
@@ -153,16 +158,39 @@ export const changePasswordController = async (req, res, next) => {
 
 export const deleteUserController = async (req, res, next) => {
     try {
-        const user = await UserModel.findById(req.user._id);
+        const user = await UserModel.findById(req.user._id).populate('groupId');
         if (!user) {
             throw new ApiError(404, "User not found");
         }
 
+        // 1. Delete all attendance records for this user
+        await AttendanceRecordModel.deleteMany({ userId: user._id });
+
+        // 2. Handle group moderation / self-managed group cleanup
+        if (user.groupId) {
+            const group = user.groupId;
+            if (group.dept === 'SELF') {
+                // Delete all resources associated with the self-managed group
+                await SubjectModel.deleteMany({ groupId: group._id });
+                await PeriodModel.deleteMany({ groupId: group._id });
+                await DayNoteModel.deleteMany({ groupId: group._id });
+                await AnnouncementModel.deleteMany({ groupId: group._id });
+                await GroupModel.findByIdAndDelete(group._id);
+            } else {
+                // If it is a normal group and this user is the moderator, unset it
+                if (group.moderatorId && group.moderatorId.toString() === user._id.toString()) {
+                    await GroupModel.findByIdAndUpdate(group._id, { $unset: { moderatorId: "" } });
+                }
+            }
+        }
+
+        // 3. Delete profile photo from Cloudinary
         if (user.profilePhoto) {
             deleteFromCloudinary(user.profilePhoto);
         }
 
-        await UserModel.findByIdAndDelete(req.user._id);
+        // 4. Delete user document
+        await UserModel.findByIdAndDelete(user._id);
 
         res.status(200).send({
             success: true,

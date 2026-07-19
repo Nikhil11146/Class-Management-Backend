@@ -5,7 +5,6 @@ import attendanceRouter from "./attendance.routes.js";
 import userRouter from "./user.routes.js";
 import announcementRouter from "./announcement.routes.js";
 import periodRouter from "./period.routes.js";
-import facultyRouter from "./faculty.routes.js";
 
 const routesRouter = Router();
 
@@ -15,6 +14,5 @@ routesRouter.use('/announcements', announcementRouter);
 routesRouter.use('/users', userRouter);
 routesRouter.use('/attendance', attendanceRouter);
 routesRouter.use('/auth', authRouter);
-routesRouter.use('/faculty', facultyRouter);
 
 export default routesRouter;

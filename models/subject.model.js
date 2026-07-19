@@ -14,10 +14,9 @@ const subjectSchema = new mongoose.Schema({
         maxlength: [10, "Maximum length: 10"],
         default: ''
     },
-    facultyId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Faculty',
-        // required: true
+    facultyName: {
+        type: String,
+        default: ''
     },
     credits: {
         type: Number,

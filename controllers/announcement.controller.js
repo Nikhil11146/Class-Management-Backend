@@ -2,12 +2,22 @@ import Announcement from '../models/announcement.model.js';
 
 export const createAnnouncement = async (req, res) => {
     try {
-        const { title, category, content, date, time } = req.body;
+        let { title, category, content, date, time } = req.body;
         const author = req.user._id;
+
+        if (!title || !title.trim()) {
+            title = 'Notice';
+        }
+        if (!date) {
+            date = new Date().toLocaleDateString('en-US');
+        }
+        if (!time) {
+            time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
         
         const announcementData = {
-            title,
-            category,
+            title: title.trim(),
+            category: category || 'General',
             content,
             date,
             time,

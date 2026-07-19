@@ -6,11 +6,7 @@ import PeriodModel from "../models/period.model.js";
 const PERIOD_POPULATE = [
     {
         path: "subjectId",
-        select: "name code credits weeklyDays facultyId",
-        populate: {
-            path: "facultyId",
-            select: "name dept"
-        }
+        select: "name code credits weeklyDays facultyName"
     },
     {
         path: "createdBy",

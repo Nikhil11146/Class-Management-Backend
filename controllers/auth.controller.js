@@ -52,11 +52,13 @@ export const registerController = async (req, res, next) => {
     try {
         const { rollNo, name, email, password, group, otp, isSelf, clg } = req.body;
 
+        const isSelfBool = isSelf === true || isSelf === 'true';
+
         if (!rollNo || !name || !email || !password || !otp || !clg) {
             throw new ApiError(400, "Missing required fields");
         }
 
-        if (!isSelf && (!group || !group.dept || !group.year || !group.sec)) {
+        if (!isSelfBool && (!group || !group.dept || !group.year || !group.sec)) {
             throw new ApiError(400, "Missing required group fields");
         }
 
@@ -82,15 +84,25 @@ export const registerController = async (req, res, next) => {
 
         let dbGroup;
         
-        if (isSelf) {
+        if (isSelfBool) {
             // Self-managed users get their own unique group and act as the moderator
-            dbGroup = new GroupModel({
-                clg: clg.trim().toUpperCase(),
+            const clgUpper = clg.trim().toUpperCase();
+            dbGroup = await GroupModel.findOne({
+                clg: clgUpper,
                 year: new Date().getFullYear(),
                 dept: 'SELF',
-                sec: email // Email is unique, ensuring a unique index (clg, year, dept, sec)
-            });
-            await dbGroup.save({ session });
+                sec: email.trim().toLowerCase()
+            }).session(session);
+
+            if (!dbGroup) {
+                dbGroup = new GroupModel({
+                    clg: clgUpper,
+                    year: new Date().getFullYear(),
+                    dept: 'SELF',
+                    sec: email.trim().toLowerCase()
+                });
+                await dbGroup.save({ session });
+            }
         } else {
             dbGroup = await GroupModel.findOne({ ...group, clg: clg.trim().toUpperCase() }).session(session);
             if (!dbGroup) {
@@ -112,11 +124,11 @@ export const registerController = async (req, res, next) => {
             email,
             password: hashedPassword,
             groupId: dbGroup._id,
-            role: isSelf ? "ROLE_MODERATOR" : "ROLE_USER"
+            role: isSelfBool ? "ROLE_MODERATOR" : "ROLE_USER"
         });
         await newUser.save({ session });
         
-        if (isSelf) {
+        if (isSelfBool) {
             dbGroup.moderatorId = newUser._id;
             await dbGroup.save({ session });
         }
