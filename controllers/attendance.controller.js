@@ -38,6 +38,7 @@ export const getMyAttendanceController = async (req, res, next) => {
 
         // Merge attendance records → history + personalNotes
         for (const record of records) {
+            if (!record.subjectId || !record.date) continue;
             const subId = record.subjectId.toString();
             if (!attendanceMap[subId]) continue;
 
@@ -56,6 +57,7 @@ export const getMyAttendanceController = async (req, res, next) => {
 
         // Merge mod/admin day notes → modNotes
         for (const dayNote of dayNotes) {
+            if (!dayNote.subjectId || !dayNote.date) continue;
             const subId = dayNote.subjectId.toString();
             if (!attendanceMap[subId]) continue;
             attendanceMap[subId].modNotes[dayNote.date] = dayNote.note;
