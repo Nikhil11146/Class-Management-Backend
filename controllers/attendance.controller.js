@@ -1,6 +1,7 @@
 import AttendanceRecordModel from '../models/attendanceRecord.model.js';
 import DayNoteModel from '../models/dayNote.model.js';
 import SubjectModel from '../models/subject.model.js';
+import mongoose from 'mongoose';
 import GroupModel from '../models/group.model.js';
 import ApiError from '../classes/apiError.class.js';
 
@@ -99,9 +100,11 @@ export const markAttendanceController = async (req, res, next) => {
 
         const validStatuses = statuses.filter(s => ['present', 'absent', 'extra', 'unmarked'].includes(s));
 
+        const subjectObjId = new mongoose.Types.ObjectId(subjectId);
+
         if (validStatuses.length === 0) {
             // Clear the record entirely
-            await AttendanceRecordModel.deleteOne({ userId: req.user._id, subjectId, date });
+            await AttendanceRecordModel.deleteOne({ userId: req.user._id, subjectId: subjectObjId, date });
             return res.status(200).send({
                 success: true,
                 message: 'Attendance cleared',
@@ -110,12 +113,14 @@ export const markAttendanceController = async (req, res, next) => {
         }
 
         const updatePayload = {
-            statuses: validStatuses,
-            ...(note !== undefined && { note: note.trim() })
+            $set: {
+                statuses: validStatuses,
+                ...(note !== undefined && { note: note.trim() })
+            }
         };
 
         const record = await AttendanceRecordModel.findOneAndUpdate(
-            { userId: req.user._id, subjectId, date },
+            { userId: req.user._id, subjectId: subjectObjId, date },
             updatePayload,
             { upsert: true, new: true, setDefaultsOnInsert: true }
         );
@@ -143,7 +148,7 @@ export const clearAttendanceController = async (req, res, next) => {
             throw new ApiError(400, 'Missing required fields: subjectId, date');
         }
 
-        await AttendanceRecordModel.deleteOne({ userId: req.user._id, subjectId, date });
+        await AttendanceRecordModel.deleteOne({ userId: req.user._id, subjectId: new mongoose.Types.ObjectId(subjectId), date });
 
         res.status(200).send({
             success: true,
