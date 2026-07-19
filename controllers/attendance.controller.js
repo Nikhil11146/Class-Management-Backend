@@ -95,7 +95,7 @@ export const markAttendanceController = async (req, res, next) => {
             throw new ApiError(404, 'Subject not found in your group');
         }
 
-        const validStatuses = statuses.filter(s => ['present', 'absent', 'extra'].includes(s));
+        const validStatuses = statuses.filter(s => ['present', 'absent', 'extra', 'unmarked'].includes(s));
 
         if (validStatuses.length === 0) {
             // Clear the record entirely
