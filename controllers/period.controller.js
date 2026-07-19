@@ -157,8 +157,7 @@ export const getPeriodsController = async (req, res, next) => {
 
 export const updatePeriodController = async (req, res, next) => {
     try {
-        const { startTime, endTime, room } = req.body;
-
+        const { startTime, endTime, room, facultyName } = req.body;
 
         const period = await PeriodModel.findById(req.params.periodId)
 
@@ -186,6 +185,12 @@ export const updatePeriodController = async (req, res, next) => {
         }
 
         await period.save();
+
+        // If facultyName provided, update it on the linked Subject too
+        if (facultyName !== undefined) {
+            await SubjectModel.findByIdAndUpdate(period.subjectId, { facultyName });
+        }
+
         await period.populate(PERIOD_POPULATE);
         res.status(200).send({
             success: true,
