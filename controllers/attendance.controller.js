@@ -26,6 +26,7 @@ export const getMyAttendanceController = async (req, res, next) => {
                 name: subject.name,
                 code: subject.code || '',
                 weeklyDays: subject.weeklyDays || [],
+                createdAt: subject.createdAt,
                 present: 0,
                 absent: 0,
                 extra: 0,
