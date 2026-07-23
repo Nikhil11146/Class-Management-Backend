@@ -179,9 +179,10 @@ export const upsertModNoteController = async (req, res, next) => {
         }
 
         // Resolve the moderator's group
-        const group = await GroupModel.findOne({ moderatorId: req.user._id });
-        if (!group) {
-            throw new ApiError(403, 'You are not a moderator of any group');
+        const group = await GroupModel.findById(req.user.groupId);
+
+        if(!group) {
+            throw new ApiError(404, "Group not found");
         }
 
         const subject = await SubjectModel.findOne({ _id: subjectId, groupId: group._id });

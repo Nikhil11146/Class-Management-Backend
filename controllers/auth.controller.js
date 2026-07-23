@@ -137,7 +137,11 @@ export const registerController = async (req, res, next) => {
 
         const token = jwt.sign({userId: newUser._id, role: newUser.role, tokenVersion: 1}, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN})
 
-        newUser.password = null;
+        let userObj = newUser.toObject();
+        userObj.password = undefined;
+        if (dbGroup) {
+            userObj.groupId = `${dbGroup.year} ${dbGroup.dept} ${dbGroup.sec}`;
+        }
 
         await session.commitTransaction();
         await session.endSession()
@@ -147,7 +151,7 @@ export const registerController = async (req, res, next) => {
             message: "User created successfully",
             data: {
                 token: token,
-                user: newUser,
+                user: userObj,
             }
         })
     } catch (e) {
@@ -165,10 +169,10 @@ export const logInController = async (req, res, next) => {
             throw new ApiError(400, "Email and password are required");
         }
 
-        const user = await UserModel.findOne({ email }).select("+password");
+        const user = await UserModel.findOne({ email }).populate('groupId').select("+password");
 
         if(!user) {
-            throw new ApiError(401, "Incorrect email or password");
+            throw new ApiError(404, "Email is not registered");
         }
 
         const isCorrectPassword = await bcrypt.compare(password, user.password);
@@ -177,14 +181,19 @@ export const logInController = async (req, res, next) => {
         }
 
         const token = jwt.sign({userId: user._id, role: user.role, tokenVersion: user.tokenVersion}, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN});
-        user.password = null;
+        
+        let userObj = user.toObject();
+        userObj.password = undefined;
+        if (userObj.groupId && typeof userObj.groupId === 'object') {
+            userObj.groupId = `${userObj.groupId.year} ${userObj.groupId.dept} ${userObj.groupId.sec}`;
+        }
 
         res.status(200).send({
             success: true,
             message: "Signed In successfully",
             data: {
                 token: token,
-                user: user
+                user: userObj
             }
         })
     } catch (e) {

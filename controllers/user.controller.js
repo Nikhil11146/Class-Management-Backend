@@ -51,11 +51,16 @@ export const getProfileController = async (req, res, next) => {
             throw new ApiError(404, "User not found");
         }
 
+        let userObj = user.toObject();
+        if (userObj.groupId && typeof userObj.groupId === 'object') {
+            userObj.groupId = `${userObj.groupId.year} ${userObj.groupId.dept} ${userObj.groupId.sec}`;
+        }
+
         res.status(200).send({
             success: true,
             message: "Profile retrieved successfully",
             data: {
-                user
+                user: userObj
             }
         });
     } catch (e) {
@@ -110,11 +115,16 @@ export const updateProfileController = async (req, res, next) => {
             throw new ApiError(404, "User not found");
         }
 
+        let userObj = user.toObject();
+        if (userObj.groupId && typeof userObj.groupId === 'object') {
+            userObj.groupId = `${userObj.groupId.year} ${userObj.groupId.dept} ${userObj.groupId.sec}`;
+        }
+
         res.status(200).send({
             success: true,
             message: "Profile updated successfully",
             data: {
-                user
+                user: userObj
             }
         });
     } catch (e) {

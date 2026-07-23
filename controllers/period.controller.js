@@ -61,7 +61,7 @@ export const createPeriodController = async (req, res, next) => {
             throw new ApiError(400, "End time must be after start time");
         }
 
-        const group = await GroupModel.findOne({ moderatorId: req.user._id });
+        const group = await GroupModel.findById(req.user.groupId);
 
         if(!group) {
             throw new ApiError(404, "Group not found");

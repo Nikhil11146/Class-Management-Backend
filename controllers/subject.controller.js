@@ -57,15 +57,14 @@ export const createSubjectController = async (req, res, next) => {
     try {
         const { name, code, facultyName, credits, weeklyDays } = req.body;
 
-        const moderatorId = req.user._id;
-
         if(!name || credits === undefined) {
             throw new ApiError(400, "Missing required fields: name, credits");
         }
 
-        const group = await GroupModel.findOne({ moderatorId });
-        if(!group) {
-            throw new ApiError(403, "You are not moderator of any Group");
+        const group = await GroupModel.findById(req.user.groupId);
+
+        if (!group) {
+            throw new ApiError(404, "Group not found");
         }
 
         let subject = await SubjectModel.findOne({ name, groupId: group._id});
