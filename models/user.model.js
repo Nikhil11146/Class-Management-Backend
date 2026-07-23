@@ -42,6 +42,11 @@ const userSchema = new mongoose.Schema({
     profilePhoto: {
         type: String,
         default: null
+    },
+    moderatorRequestStatus: {
+        type: String,
+        enum: ['none', 'pending', 'rejected'],
+        default: 'none'
     }
 }, {
     timestamps: true

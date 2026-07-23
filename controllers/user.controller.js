@@ -210,3 +210,81 @@ export const deleteUserController = async (req, res, next) => {
         next(e);
     }
 };
+
+export const requestModeratorRoleController = async (req, res, next) => {
+    try {
+        const user = await UserModel.findById(req.user._id);
+        if (!user) throw new ApiError(404, "User not found");
+        
+        user.moderatorRequestStatus = 'pending';
+        await user.save();
+        
+        res.status(200).send({
+            success: true,
+            message: "Moderator role request submitted successfully"
+        });
+    } catch (e) {
+        next(e);
+    }
+};
+
+export const getModeratorRequestsController = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'ROLE_ADMIN') {
+            throw new ApiError(403, "Forbidden: Only admins can view requests");
+        }
+        
+        const requests = await UserModel.find({
+            groupId: req.user.groupId,
+            moderatorRequestStatus: 'pending'
+        }).select('name email rollNo moderatorRequestStatus');
+        
+        res.status(200).send({
+            success: true,
+            data: { requests }
+        });
+    } catch (e) {
+        next(e);
+    }
+};
+
+export const handleModeratorRequestController = async (req, res, next) => {
+    try {
+        if (req.user.role !== 'ROLE_ADMIN') {
+            throw new ApiError(403, "Forbidden: Only admins can handle requests");
+        }
+        
+        const { action } = req.body;
+        const targetUserId = req.params.userId;
+        
+        if (!['approve', 'reject'].includes(action)) {
+            throw new ApiError(400, "Invalid action. Must be 'approve' or 'reject'");
+        }
+        
+        const targetUser = await UserModel.findOne({
+            _id: targetUserId,
+            groupId: req.user.groupId,
+            moderatorRequestStatus: 'pending'
+        });
+        
+        if (!targetUser) {
+            throw new ApiError(404, "Pending request not found");
+        }
+        
+        if (action === 'approve') {
+            targetUser.role = 'ROLE_MODERATOR';
+            targetUser.moderatorRequestStatus = 'none';
+        } else {
+            targetUser.moderatorRequestStatus = 'rejected';
+        }
+        
+        await targetUser.save();
+        
+        res.status(200).send({
+            success: true,
+            message: `Request ${action}d successfully`
+        });
+    } catch (e) {
+        next(e);
+    }
+};
